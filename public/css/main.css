@@ -1,0 +1,26 @@
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+body {
+  overflow-y: auto;
+  background: url('/images/background.png');
+}
+
+body.el-popup-parent--hidden {
+  overflow-y: auto !important;
+}
+
+.noscript {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  margin-top: calc(50vh - 32px);
+  text-align: center;
+}
