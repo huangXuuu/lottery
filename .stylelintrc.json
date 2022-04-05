@@ -6,6 +6,9 @@
     "stylelint-config-recess-order"
   ],
   "rules": {
-    "string-quotes": "single"
+    "string-quotes": "single",
+    "selector-pseudo-element-no-unknown": [true, {
+      "ignorePseudoElements": ["v-deep"]
+    }]
   }
 }

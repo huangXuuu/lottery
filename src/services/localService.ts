@@ -1,8 +1,9 @@
 import { setLocalStorage, getLocalStorage, clearLocalStorage } from '@/utils/localStorageUtils';
-import { User } from '@/models';
+import { User, Prize } from '@/models';
 
 const local = {
-  userInfo: [] as User[] // 用户情报
+  userInfo: [] as User[], // 用户情报
+  prizeInfo: [] as Prize[] // 奖品情报
 };
 
 export const localService = new Proxy(local, {
