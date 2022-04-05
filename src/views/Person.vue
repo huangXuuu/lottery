@@ -20,6 +20,11 @@
           <el-input v-model="scope.row.name" placeholder="请输入姓名" />
         </template>
       </el-table-column>
+      <el-table-column label="职位" width="180" prop="type" sortable>
+        <template #default="scope">
+          <el-input v-model="scope.row.type" placeholder="请输入职位" />
+        </template>
+      </el-table-column>
       <el-table-column label="头像" width="180">
         <template #default="scope">
           <el-avatar
@@ -32,11 +37,11 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="中奖次数" width="130" sortable>
+      <!-- <el-table-column label="中奖次数" width="130" sortable>
         <template #default="scope">
           <el-tag>{{ scope.row.prizeCounts }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作">
         <template #default="scope">
           <el-popconfirm
@@ -133,6 +138,7 @@ const onInsertBtnClick = (): void => {
   const user = {
     id: getUUID(),
     name: '',
+    type: '',
     image: '',
     prizeCounts: 0
   };
@@ -180,12 +186,12 @@ const onImageUploaded = (data: string): void => {
 </script>
 
 <style scoped>
-.table {
-  width: 100%;
-}
-
 .container {
   padding: 24px;
+}
+
+.table {
+  width: 100%;
 }
 
 .operation {

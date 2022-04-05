@@ -9,6 +9,10 @@ export interface User {
    */
   id: string;
   /**
+   * 职位
+   */
+  type: string;
+  /**
    * 姓名
    */
   name: string;
@@ -20,4 +24,28 @@ export interface User {
    * 中奖次数
    */
   prizeCounts: number;
+  /**
+   * 当前活跃
+   */
+  active?: boolean;
+}
+
+/**
+ * 奖品
+ *
+ * @interface
+ */
+export interface Prize {
+  /**
+   * ID
+   */
+  id: string;
+  /**
+   * 类别
+   */
+  type: string;
+  /**
+   * 名称
+   */
+  name: string;
 }
