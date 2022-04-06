@@ -74,7 +74,10 @@
           </el-icon>
           <span>开始</span>
         </el-button>
-        <PrizeLottery v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLottery>
+        <!-- 转盘抽奖 -->
+        <!-- <PrizeLotteryTurntable v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotteryTurntable> -->
+        <!-- 老虎机抽奖 -->
+        <PrizeLotterySlotMachine v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotterySlotMachine>
       </div>
     </div>
   </div>
@@ -227,12 +230,5 @@ const onStartBtnClick = (): void => {
   margin-top: 12px;
   margin-bottom: 36px;
   text-align: center;
-}
-
-.prizer {
-  ::v-deep(.el-dialog) {
-    background-image: url('/images/lotteryBackground.jpeg');
-    background-size: 100% 100%;
-  }
 }
 </style>

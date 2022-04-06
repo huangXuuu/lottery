@@ -15,11 +15,11 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
-    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     PageHeader: typeof import('./components/PageHeader.vue')['default']
-    PrizeLottery: typeof import('./components/PrizeLottery.vue')['default']
+    PrizeLotterySlotMachine: typeof import('./components/PrizeLotterySlotMachine.vue')['default']
+    PrizeLotteryTurntable: typeof import('./components/PrizeLotteryTurntable.vue')['default']
   }
 }
 

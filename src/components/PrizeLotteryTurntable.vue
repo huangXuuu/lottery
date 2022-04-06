@@ -1,23 +1,30 @@
+<!--
+ * 组件名：转盘抽奖
+ *
+ * author： 黄旭
+ -->
 <template>
-  <el-dialog v-model="dialogVisible" :fullscreen="true">
-    <div class="Prizer">
-      <el-button class="center-of-prize start" type="danger" @click="onStartBtnClick">
-        <el-icon>
-          <pointer />
-        </el-icon>
-        <span>开始</span>
-      </el-button>
-      <ul ref="prizeContainer" class="container">
-        <li class="item" v-for="item in prizeData" :key="item.id">
-          <div class="prize-name">{{ item.name }}</div>
-        </li>
-      </ul>
-      <img class="center-of-prize point-img" src="images/point.png" />
-    </div>
-  </el-dialog>
+  <div class="prize-lottery">
+    <el-dialog v-model="dialogVisible" :fullscreen="true">
+      <div class="Prizer">
+        <el-button class="center-of-prize start" type="danger" @click="onStartBtnClick">
+          <el-icon>
+            <pointer />
+          </el-icon>
+          <span>开始</span>
+        </el-button>
+        <ul ref="prizeContainer" class="container">
+          <li class="item" v-for="item in prizeData" :key="item.id">
+            <div class="prize-name">{{ item.name }}</div>
+          </li>
+        </ul>
+        <img class="center-of-prize point-img" src="images/point.png" />
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
-<script setup lang="ts" name="PrizeLottery">
+<script setup lang="ts" name="PrizeLotteryTurntable">
 import { PropType } from 'vue';
 import { Pointer } from '@element-plus/icons-vue';
 
@@ -120,6 +127,13 @@ const fun = (): number => {
 </script>
 
 <style scoped lang="scss">
+.prize-lottery {
+  ::v-deep(.el-dialog) {
+    background-image: url('/images/lotteryBackground.jpeg');
+    background-size: 100% 100%;
+  }
+}
+
 .container {
   position: absolute;
   top: -150px;

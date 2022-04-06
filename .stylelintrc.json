@@ -9,6 +9,9 @@
     "string-quotes": "single",
     "selector-pseudo-element-no-unknown": [true, {
       "ignorePseudoElements": ["v-deep"]
+    }],
+    "function-no-unknown": [true, {
+      "ignoreFunctions": ["v-bind"]
     }]
   }
 }
