@@ -86,7 +86,7 @@ let currentUser = {} as User;
 /**
  * 人员列表
  */
-const tableData: User[] = reactive([]);
+const tableData = ref<User[]>([]);
 
 onMounted(() => {
   initTableData();
@@ -104,8 +104,8 @@ onUnmounted(() => {
  */
 const initTableData = (): void => {
   const data = localService.userInfo;
-  if (data) {
-    tableData.splice(0, tableData.length, ...data);
+  if (data && data.length > 0) {
+    tableData.value = data;
   }
 };
 
@@ -143,7 +143,7 @@ const onInsertBtnClick = (): void => {
     prizeCounts: 0
   };
 
-  tableData.push(user);
+  tableData.value.push(user);
 };
 
 /**
@@ -161,7 +161,7 @@ const onSaveBtnClick = (): void => {
  * @returns {void}
  */
 const saveTableData = (): void => {
-  localService.userInfo = tableData;
+  localService.userInfo = tableData.value;
 };
 
 /**
@@ -171,7 +171,7 @@ const saveTableData = (): void => {
  * @returns {void}
  */
 const onDeleteBtnClick = (index: number): void => {
-  tableData.splice(index, 1);
+  tableData.value.splice(index, 1);
 };
 
 /**

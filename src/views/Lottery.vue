@@ -78,7 +78,11 @@
         <!-- 转盘抽奖 -->
         <!-- <PrizeLotteryTurntable v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotteryTurntable> -->
         <!-- 老虎机抽奖 -->
-        <PrizeLotterySlotMachine v-model="dialogVisible" :prizeList="targetPrizeData"></PrizeLotterySlotMachine>
+        <PrizeLotterySlotMachine
+          v-model="dialogVisible"
+          :prizeList="targetPrizeData"
+          @afterLottery="afterLottery"
+        ></PrizeLotterySlotMachine>
       </div>
     </div>
   </div>
@@ -188,6 +192,13 @@ const dialogVisible = ref(false);
  */
 const onStartBtnClick = (): void => {
   dialogVisible.value = true;
+};
+
+const afterLottery = (prize: Prize): void => {
+  if (prize.stock !== 0) {
+    prize.stock--;
+  }
+  localService.prizeInfo = prizeData.value;
 };
 </script>
 
