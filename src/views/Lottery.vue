@@ -59,7 +59,13 @@
               <el-table-column label="职位" width="180" prop="type" sortable></el-table-column>
               <el-table-column label="头像" width="180">
                 <template #default="scope">
-                  <el-avatar class="avatar" shape="square" :size="160" fit="cover" :src="scope.row.image" />
+                  <el-avatar
+                    class="avatar"
+                    shape="square"
+                    :size="160"
+                    fit="cover"
+                    :src="scope.row.image"
+                  />
                 </template>
               </el-table-column>
             </el-table>
@@ -78,7 +84,11 @@
         <!-- 转盘抽奖 -->
         <!-- <PrizeLotteryTurntable v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotteryTurntable> -->
         <!-- 老虎机抽奖 -->
-        <PrizeLotterySlotMachine v-model="dialogVisible" :prizeList="targetPrizeData"></PrizeLotterySlotMachine>
+        <PrizeLotterySlotMachine
+          v-model="dialogVisible"
+          :prizeList="targetPrizeData"
+          @afterLottery="afterLottery"
+        ></PrizeLotterySlotMachine>
       </div>
     </div>
   </div>
@@ -188,6 +198,13 @@ const dialogVisible = ref(false);
  */
 const onStartBtnClick = (): void => {
   dialogVisible.value = true;
+};
+
+const afterLottery = (prize: Prize): void => {
+  if (prize.stock !== 0) {
+    prize.stock--;
+  }
+  localService.prizeInfo = prizeData.value;
 };
 </script>
 

@@ -15,10 +15,6 @@
               </el-icon>
               <span>开始</span>
             </el-button>
-            <el-button class="center-of-prize start" type="danger" @click="resetGame">
-              <el-icon><refresh /></el-icon>
-              <span>重置</span>
-            </el-button>
           </div>
           <div class="box">
             <div ref="prizeContainer" class="container">
@@ -31,11 +27,25 @@
       </div>
     </el-dialog>
   </div>
+  <div class="result">
+    <el-dialog v-model="resultVisible" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+      <div class="prize-name">{{ currentPrize.name }}!!!</div>
+      <div class="prize-name">还剩{{ currentPrize.stock }}件</div>
+      <template #footer>
+        <el-button class="center-of-prize start" type="danger" @click="onRestartBtnClick">
+          <el-icon>
+            <pointer />
+          </el-icon>
+          <span>再来一次</span>
+        </el-button>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts" name="PrizeLotterySlotMachine">
 import { PropType } from 'vue';
-import { Pointer, Refresh } from '@element-plus/icons-vue';
+import { Pointer } from '@element-plus/icons-vue';
 
 import { Prize } from '@/models';
 
@@ -53,7 +63,11 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['update:modelValue']);
+/**
+ * update:modelValue 双向绑定值
+ * afterLottery：抽奖结束后回调
+ */
+const emit = defineEmits(['update:modelValue', 'afterLottery']);
 
 const modelValue = toRef(props, 'modelValue');
 
@@ -64,21 +78,42 @@ const dialogVisible = computed({
   }
 });
 
+/**
+ * 记录本次抽中的奖品
+ */
 const currentPrize = ref<Prize>({} as Prize);
 
+/**
+ * 抽奖配置
+ */
 const option = ref({
+  /**
+   * 旋转轮数
+   */
   round: 6,
+  /**
+   * 奖品高度
+   */
   itemHeight: 100
 });
 
+/**
+ * 奖品高度（单位px）css用
+ */
 const itemHeightWithPx = computed(() => {
   return `${option.value.itemHeight}px`;
 });
 
+/**
+ * 奖品容器高度
+ */
 const containerHeight = computed(() => {
   return prizeData.value.length * option.value.round * option.value.itemHeight;
 });
 
+/**
+ * 奖品容器高度（单位px）css用
+ */
 const containerHeightWithPx = computed(() => {
   return `${containerHeight.value}px`;
 });
@@ -89,7 +124,7 @@ const containerHeightWithPx = computed(() => {
 const prizeData = toRef(props, 'prizeList');
 
 /**
- * Ref
+ * 奖品容器Ref
  */
 const prizeContainer = ref<HTMLUListElement>();
 
@@ -102,6 +137,8 @@ const onStartBtnClick = (): void => {
   let index = parseInt((Math.random() * prizeData.value.length).toString());
   currentPrize.value = prizeData.value[index];
   startGame(index);
+  emit('afterLottery', currentPrize.value);
+  showResult();
 };
 
 /**
@@ -140,6 +177,32 @@ const resetGame = (): void => {
     target.classList.remove('animation-ease');
     target.style.transform = `translateY(0px)`;
   }
+};
+
+/**
+ * 抽奖结果弹框显示flag
+ */
+const resultVisible = ref(false);
+
+/**
+ * 抽奖结果弹框显示
+ *
+ * @returns {void}
+ */
+const showResult = (): void => {
+  setTimeout(() => {
+    resultVisible.value = true;
+  }, 3500);
+};
+
+/**
+ * 再来一次按钮点击时处理
+ *
+ * @returns {void}
+ */
+const onRestartBtnClick = (): void => {
+  resultVisible.value = false;
+  resetGame();
 };
 </script>
 
@@ -215,6 +278,38 @@ const resetGame = (): void => {
         -webkit-text-stroke: 1.2px #6c4c4c;
       }
     }
+  }
+}
+
+.result {
+  ::v-deep(.el-dialog) {
+    width: 650px;
+    height: 650px;
+    overflow: hidden;
+    background-image: url('/images/result.jpg');
+    background-size: 100% 100%;
+  }
+
+  ::v-deep(.el-dialog__body) {
+    width: 100%;
+    height: 80%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .prize-name {
+    font-size: 80px;
+    -webkit-text-fill-color: #fab0b0;
+    -webkit-text-stroke: 3px #b29642;
+  }
+
+  ::v-deep(.el-dialog__footer) {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
