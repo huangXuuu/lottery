@@ -11,8 +11,10 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.NODE_ENV === 'production' ? './' : '/',
   build: {
-    chunkSizeWarningLimit: 2097152
+    chunkSizeWarningLimit: 2097152,
+    assetsDir: './'
   },
   server: {
     host: '0.0.0.0',

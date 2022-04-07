@@ -33,6 +33,7 @@
               <el-table-column type="selection" width="40" />
               <el-table-column label="类别" width="180" prop="type" sortable></el-table-column>
               <el-table-column label="奖项" width="180" prop="name" sortable></el-table-column>
+              <el-table-column label="库存" width="180" prop="stock" sortable></el-table-column>
             </el-table>
           </div>
         </el-collapse-item>
@@ -77,7 +78,7 @@
         <!-- 转盘抽奖 -->
         <!-- <PrizeLotteryTurntable v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotteryTurntable> -->
         <!-- 老虎机抽奖 -->
-        <PrizeLotterySlotMachine v-model="dialogVisible" :prizeList="prizeChecked"></PrizeLotterySlotMachine>
+        <PrizeLotterySlotMachine v-model="dialogVisible" :prizeList="targetPrizeData"></PrizeLotterySlotMachine>
       </div>
     </div>
   </div>
@@ -127,6 +128,10 @@ const handlePrizeSelectionChange = (val: Prize): void => {
  * 复选奖品列表
  */
 const prizeChecked = ref<Prize[]>([] as Prize[]);
+
+const targetPrizeData = computed(() => {
+  return prizeChecked.value.filter(item => item.stock > 0);
+});
 
 /**
  * 奖品表格复选项变更时处理

@@ -23,4 +23,9 @@ import PageHeader from './components/PageHeader.vue';
 * {
   font-size: var(--el-font-size-large);
 }
+
+body {
+  overflow-y: auto;
+  background: url('/images/background.png');
+}
 </style>

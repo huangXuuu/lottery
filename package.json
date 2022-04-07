@@ -2,13 +2,14 @@
   "name": "lottery",
   "private": true,
   "version": "0.0.0",
+  "main": "public/electron.js",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development USE_MOCK=true vite -m development",
     "start:staging": "cross-env NODE_ENV=staging USE_MOCK=false vite -m staging",
     "start:prod": "cross-env NODE_ENV=production USE_MOCK=false vite -m production",
     "build:dev": "vue-tsc --noEmit && cross-env NODE_ENV=development vite build -m development",
     "build:staging": "vue-tsc --noEmit && cross-env NODE_ENV=staging vite build -m production",
-    "build:prod": "vue-tsc --noEmit && cross-env NODE_ENV=production vite build -m production",
+    "build:prod": "cross-env NODE_ENV=production vite build -m production",
     "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit",
     "format": "npm run format:code && npm run format:style",
@@ -16,7 +17,11 @@
     "format:style": "npx stylelint --custom-syntax postcss-html --fix \"public/**/*.css\" \"src/**/*.css\" \"src/**/*.vue\"",
     "lint": "npm run lint:code && npm run lint:style && npm run typecheck",
     "lint:code": "eslint . --ext .vue,.ts --ignore-pattern '/node_modules/' --ignore-pattern '/dist/' --no-fix",
-    "lint:style": "npx stylelint --custom-syntax postcss-html \"public/**/*.css\" \"src/**/*.css\" \"src/**/*.vue\""
+    "lint:style": "npx stylelint --custom-syntax postcss-html \"public/**/*.css\" \"src/**/*.css\" \"src/**/*.vue\"",
+    "electron-start": "electron .",
+    "electron:linux": "npm run build:prod && electron-builder build --linux",
+    "electron:windows": "npm run build:prod && electron-builder build --windows",
+    "electron:mac": "npm run build:prod && electron-builder build --mac"
   },
   "dependencies": {
     "@element-plus/icons-vue": "1.0.1",
@@ -29,7 +34,8 @@
     "vue": "3.2.25",
     "vue-cropper": "1.0.3",
     "vue-logger-plugin": "2.2.2",
-    "vue-router": "4.0.13"
+    "vue-router": "4.0.13",
+    "electron-is-dev": "1.1.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "1.1.0",
@@ -66,6 +72,35 @@
     "vite-plugin-vue-images": "0.6.1",
     "vite-plugin-vue-setup-extend": "0.4.0",
     "vti": "0.1.5",
-    "vue-tsc": "0.32.1"
+    "vue-tsc": "0.32.1",
+    "electron": "8.2.2",
+    "electron-builder": "22.6.0"
+  },
+  "build": {
+    "productName": "lottery",
+    "directories": {
+      "output": "release/"
+    },
+    "files": [
+      "**/*",
+      "!**/*.ts",
+      "!*.code-workspace",
+      "!LICENSE.md",
+      "!package.json",
+      "!package-lock.json",
+      "!src/",
+      "!vite.config.json",
+      "!tsconfig.json",
+      "!tslint.json"
+    ],
+    "win": {
+      "icon": "dist/icons/favicon.ico"
+    },
+    "mac": {
+      "icon": "dist/icons/icon.icns"
+    },
+    "linux": {
+      "icon": "dist/icons/icon.icns"
+    }
   }
 }
