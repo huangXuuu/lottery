@@ -48,4 +48,8 @@ export interface Prize {
    * 名称
    */
   name: string;
+  /**
+   * 库存
+   */
+  stock: number;
 }

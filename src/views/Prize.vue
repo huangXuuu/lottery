@@ -25,6 +25,11 @@
           <el-input v-model="scope.row.name" placeholder="请输入奖项" />
         </template>
       </el-table-column>
+      <el-table-column label="库存" width="180" prop="stock" sortable>
+        <template #default="scope">
+          <el-input v-model="scope.row.stock" placeholder="请输入库存" />
+        </template>
+      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-popconfirm
@@ -87,7 +92,8 @@ const onInsertBtnClick = (): void => {
   const prize = {
     id: getUUID(),
     name: '',
-    type: ''
+    type: '',
+    stock: 1
   };
 
   tableData.push(prize);
