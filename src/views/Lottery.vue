@@ -59,13 +59,7 @@
               <el-table-column label="职位" width="180" prop="type" sortable></el-table-column>
               <el-table-column label="头像" width="180">
                 <template #default="scope">
-                  <el-avatar
-                    class="avatar"
-                    shape="square"
-                    :size="160"
-                    fit="cover"
-                    :src="scope.row.image"
-                  />
+                  <el-avatar class="avatar" shape="square" :size="160" fit="cover" :src="scope.row.image" />
                 </template>
               </el-table-column>
             </el-table>

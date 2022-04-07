@@ -290,13 +290,14 @@ const onRestartBtnClick = (): void => {
     background-size: 100% 100%;
   }
 
+  // stylelint-disable-next-line selector-class-pattern
   ::v-deep(.el-dialog__body) {
-    width: 100%;
-    height: 80%;
-    padding: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 100%;
+    height: 80%;
+    padding: 0;
   }
 
   .prize-name {
@@ -305,6 +306,7 @@ const onRestartBtnClick = (): void => {
     -webkit-text-stroke: 3px #b29642;
   }
 
+  // stylelint-disable-next-line selector-class-pattern
   ::v-deep(.el-dialog__footer) {
     position: absolute;
     bottom: 0;
