@@ -37,11 +37,11 @@
           />
         </template>
       </el-table-column>
-      <!-- <el-table-column label="中奖次数" width="130" sortable>
+      <el-table-column label="中奖次数" width="130" sortable>
         <template #default="scope">
           <el-tag>{{ scope.row.prizeCounts }}</el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="操作">
         <template #default="scope">
           <el-popconfirm
@@ -72,21 +72,22 @@
 <script lang="ts" setup>
 import { Plus, DocumentChecked, InfoFilled } from '@element-plus/icons-vue';
 
-import { User } from '@/models';
+import { Person } from '@/models';
 import { localService } from '@/services/localService';
 import { getUUID } from '@/utils/helperUtils';
+import { Category } from '@/commons/constants';
 
 const isCropperShow = ref(false);
 
 /**
  * 当前选择人员
  */
-let currentUser = {} as User;
+let currentPerson = {} as Person;
 
 /**
  * 人员列表
  */
-const tableData = ref<User[]>([]);
+const tableData = ref<Person[]>([]);
 
 onMounted(() => {
   initTableData();
@@ -103,7 +104,7 @@ onUnmounted(() => {
  * @returns {void}
  */
 const initTableData = (): void => {
-  const data = localService.userInfo;
+  const data = localService.personInfo;
   if (data && data.length > 0) {
     tableData.value = data;
   }
@@ -112,12 +113,12 @@ const initTableData = (): void => {
 /**
  * 头像点击时的处理
  *
- * @param {User} data 当前点击的数据
+ * @param {Person} data 当前点击的数据
  * @returns {void}
  */
-const onAvatarClick = (data: User): void => {
+const onAvatarClick = (data: Person): void => {
   isCropperShow.value = true;
-  currentUser = data;
+  currentPerson = data;
 };
 
 /**
@@ -126,7 +127,7 @@ const onAvatarClick = (data: User): void => {
  * @returns {string} 图片
  */
 const getCurrentImg = (): string => {
-  return currentUser.image;
+  return currentPerson.image;
 };
 
 /**
@@ -137,6 +138,7 @@ const getCurrentImg = (): string => {
 const onInsertBtnClick = (): void => {
   const user = {
     id: getUUID(),
+    category: Category.PERSON,
     name: '',
     type: '',
     image: '',
@@ -161,7 +163,7 @@ const onSaveBtnClick = (): void => {
  * @returns {void}
  */
 const saveTableData = (): void => {
-  localService.userInfo = tableData.value;
+  localService.personInfo = tableData.value;
 };
 
 /**
@@ -181,7 +183,7 @@ const onDeleteBtnClick = (index: number): void => {
  * @returns {void}
  */
 const onImageUploaded = (data: string): void => {
-  currentUser.image = data;
+  currentPerson.image = data;
 };
 </script>
 

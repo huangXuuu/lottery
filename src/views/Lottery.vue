@@ -1,13 +1,8 @@
 <template>
   <div class="container">
-    <!-- <div>
-      <el-switch
-        v-model="isSinglePrizePattern"
-        size="large"
-        active-text="一个奖品众人抽奖"
-        inactive-text="多个奖品单人抽奖"
-      />
-    </div>-->
+    <div>
+      <el-switch v-model="isSinglePrizePattern" size="large" active-text="抽中奖者" inactive-text="抽奖品" />
+    </div>
     <div class="filter">
       <el-collapse v-model="activeNames">
         <el-collapse-item name="1">
@@ -16,52 +11,29 @@
               <el-icon class="title-icon">
                 <shopping-bag />
               </el-icon>
-              <span>奖品设置</span>
+              <span>奖池设置</span>
             </div>
           </template>
           <div class="table">
-            <div v-if="isSinglePrizePattern">※单击表格数据，选择当前奖品</div>
+            <div>※请选中加入奖池的内容</div>
             <el-table
+              ref="targetTableRef"
               class="table"
-              :data="prizeData"
+              :data="targetData"
               :border="true"
               :stripe="true"
-              :highlight-current-row="isSinglePrizePattern"
-              @current-change="handlePrizeSelectionChange"
-              @selection-change="handlePrizeCheckBoxChange"
+              @selection-change="handleTargetCheckBoxChange"
             >
               <el-table-column type="selection" width="40" />
               <el-table-column label="类别" width="180" prop="type" sortable></el-table-column>
-              <el-table-column label="奖项" width="180" prop="name" sortable></el-table-column>
-              <el-table-column label="库存" width="180" prop="stock" sortable></el-table-column>
-            </el-table>
-          </div>
-        </el-collapse-item>
-        <el-collapse-item v-if="isSinglePrizePattern" name="2">
-          <template #title>
-            <div class="filter-title">
-              <el-icon class="title-icon">
-                <avatar />
-              </el-icon>
-              <span>目标人群设置</span>
-            </div>
-          </template>
-          <div class="table">
-            <el-table
-              class="table"
-              :data="userData"
-              :border="true"
-              :stripe="true"
-              @selection-change="handleUserSelectionChange"
-            >
-              <el-table-column type="selection" width="40" />
-              <el-table-column label="姓名" width="180" prop="name" sortable></el-table-column>
-              <el-table-column label="职位" width="180" prop="type" sortable></el-table-column>
-              <el-table-column label="头像" width="180">
-                <template #default="scope">
-                  <el-avatar class="avatar" shape="square" :size="160" fit="cover" :src="scope.row.image" />
-                </template>
-              </el-table-column>
+              <el-table-column :label="getTableLabel('name')" width="180" prop="name" sortable></el-table-column>
+              <el-table-column
+                v-if="!isSinglePrizePattern"
+                label="库存"
+                width="180"
+                prop="stock"
+                sortable
+              ></el-table-column>
             </el-table>
           </div>
         </el-collapse-item>
@@ -81,6 +53,7 @@
         <PrizeLotterySlotMachine
           v-model="dialogVisible"
           :prizeList="targetPrizeData"
+          :option="lotteryOption"
           @afterLottery="afterLottery"
         ></PrizeLotterySlotMachine>
       </div>
@@ -89,17 +62,63 @@
 </template>
 
 <script lang="ts" setup>
-import { Avatar, ShoppingBag, Pointer } from '@element-plus/icons-vue';
+import { ShoppingBag, Pointer } from '@element-plus/icons-vue';
+import { ElTable } from 'element-plus';
 
-import { Prize, User } from '@/models';
+import { Target, Prize, LotteryOption } from '@/models';
 import { localService } from '@/services/localService';
+import { Category } from '@/commons/constants';
 
 /**
  * 抽奖模式
- * false：多个奖品单人抽奖
- * true：一个奖品众人抽奖
+ * false：抽奖品
+ * true：抽中奖者
  */
 const isSinglePrizePattern = ref(false);
+
+/**
+ * 目标选择表格Ref
+ */
+const targetTableRef = ref<InstanceType<typeof ElTable>>();
+
+/**
+ * 抽奖配置
+ */
+const lotteryOption = computed(() => {
+  const option: LotteryOption = {
+    round: 6,
+    itemHeight: 100,
+    showLimitStock: !isSinglePrizePattern.value
+  };
+
+  return option;
+});
+
+/**
+ * 列名取得
+ *
+ * @param {string} key 列key
+ * @returns {string} 列名
+ */
+const getTableLabel = (key: string): string => {
+  if (isSinglePrizePattern.value) {
+    switch (key) {
+      case 'name':
+        return '姓名';
+      default:
+        return '';
+    }
+  } else {
+    switch (key) {
+      case 'name':
+        return '奖品名称';
+      case 'stock':
+        return '库存';
+      default:
+        return '';
+    }
+  }
+};
 
 /**
  * 设置折叠框的展开项
@@ -109,75 +128,46 @@ const activeNames = ref(['1']);
 /**
  * 已登录的全部奖品信息
  */
-const prizeData = computed(() => {
-  return localService.prizeInfo;
+const targetData = computed(() => {
+  return isSinglePrizePattern.value ? localService.personInfo : localService.prizeInfo;
 });
-
-/**
- * 单选奖品
- */
-const prizeSelection = ref<Prize>({} as Prize);
-
-/**
- * 奖品表格单选项变更时处理
- *
- * @param {Prize} val 奖品
- * @returns {void}
- */
-const handlePrizeSelectionChange = (val: Prize): void => {
-  prizeSelection.value = val;
-};
 
 /**
  * 复选奖品列表
  */
-const prizeChecked = ref<Prize[]>([] as Prize[]);
+const targetChecked = ref<Target[]>([] as Target[]);
 
-const targetPrizeData = computed(() => {
-  return prizeChecked.value.filter(item => item.stock > 0);
+/**
+ * 抽奖目标
+ */
+const targetPrizeData = computed((): Target[] => {
+  return targetChecked.value.filter(item => {
+    // 奖品
+    if (item.category === Category.PRIZE) {
+      return (item as Prize).stock > 0;
+    }
+    // 人员
+    else {
+      return true;
+    }
+  });
 });
 
 /**
  * 奖品表格复选项变更时处理
  *
- * @param {Prize[]} val 奖品
+ * @param {Target[]} val 奖品
  * @returns {void}
  */
-const handlePrizeCheckBoxChange = (val: Prize[]): void => {
-  prizeChecked.value = val;
-};
-
-/**
- * 已登录的全部人员信息
- */
-const userData = computed(() => {
-  return localService.userInfo;
-});
-
-/**
- * 复选人员列表
- */
-const userSelection = ref<User[]>([]);
-
-/**
- * 人员表格复选项变更时处理
- *
- * @param {User[]} val 人员
- * @returns {void}
- */
-const handleUserSelectionChange = (val: User[]): void => {
-  userSelection.value = val;
+const handleTargetCheckBoxChange = (val: Target[]): void => {
+  targetChecked.value = val;
 };
 
 /**
  * 基于已选择的内容是否可以开始抽奖
  */
 const canStart = computed((): boolean => {
-  if (isSinglePrizePattern.value) {
-    return (prizeSelection.value.id && userSelection.value.length > 0) as boolean;
-  } else {
-    return (prizeChecked.value.length > 0) as boolean;
-  }
+  return targetPrizeData.value.length > 0;
 });
 
 /**
@@ -194,12 +184,38 @@ const onStartBtnClick = (): void => {
   dialogVisible.value = true;
 };
 
-const afterLottery = (prize: Prize): void => {
-  if (prize.stock !== 0) {
-    prize.stock--;
+/**
+ * 一次抽奖后的回调
+ *
+ * @param {Target} target 抽中的目标
+ * @returns {void}
+ */
+const afterLottery = (target: Target): void => {
+  // 奖品
+  if (target.category === Category.PRIZE) {
+    const prize = target as Prize;
+    if (prize.stock !== 0) {
+      prize.stock--;
+      localService.prizeInfo = targetData.value as Prize[];
+    }
   }
-  localService.prizeInfo = prizeData.value;
+  // 人员
+  else {
+    const index = targetChecked.value.findIndex(item => item.id === target.id);
+    targetChecked.value.splice(index, 1);
+  }
 };
+
+/**
+ * 结束抽奖后重置目标列表
+ */
+watch(dialogVisible, (val: boolean) => {
+  if (val) {
+    return;
+  }
+
+  targetTableRef.value?.clearSelection();
+});
 </script>
 
 <style scoped lang="scss">

@@ -32,3 +32,20 @@ export const MinImage = {
   Width: 258,
   Height: 258
 };
+
+/**
+ * 抽奖目标大分类
+ *
+ * @readonly
+ * @constant
+ */
+export enum Category {
+  /**
+   * 人员
+   */
+  PERSON = 'person',
+  /**
+   * 奖项
+   */
+  PRIZE = 'prize'
+}
