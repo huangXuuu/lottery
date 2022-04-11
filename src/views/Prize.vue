@@ -56,6 +56,7 @@ import { Plus, DocumentChecked, InfoFilled } from '@element-plus/icons-vue';
 import { Prize } from '@/models';
 import { localService } from '@/services/localService';
 import { getUUID } from '@/utils/helperUtils';
+import { Category } from '@/commons/constants';
 
 /**
  * 奖品列表
@@ -91,6 +92,7 @@ const initTableData = (): void => {
 const onInsertBtnClick = (): void => {
   const prize = {
     id: getUUID(),
+    category: Category.PRIZE,
     name: '',
     type: '',
     stock: 1

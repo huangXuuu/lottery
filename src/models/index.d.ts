@@ -1,33 +1,13 @@
 /**
- * 用户
+ * 人
  *
  * @interface
  */
-export interface User {
-  /**
-   * ID
-   */
-  id: string;
-  /**
-   * 职位
-   */
-  type: string;
-  /**
-   * 姓名
-   */
-  name: string;
+export interface Person extends Target {
   /**
    * 头像
    */
   image: string;
-  /**
-   * 中奖次数
-   */
-  prizeCounts: number;
-  /**
-   * 当前活跃
-   */
-  active?: boolean;
 }
 
 /**
@@ -35,11 +15,27 @@ export interface User {
  *
  * @interface
  */
-export interface Prize {
+export interface Prize extends Target {
+  /**
+   * 库存
+   */
+  stock: number;
+}
+
+/**
+ * 抽取目标
+ *
+ * @interface
+ */
+export interface Target {
   /**
    * ID
    */
   id: string;
+  /**
+   * 大分类
+   */
+  category: string;
   /**
    * 类别
    */
@@ -49,7 +45,31 @@ export interface Prize {
    */
   name: string;
   /**
-   * 库存
+   * 抽中次数
    */
-  stock: number;
+  prizeCounts?: number;
+  /**
+   * 可作为目标次数
+   */
+  stock?: number;
+}
+
+/**
+ * 抽奖配置
+ *
+ * @interface
+ */
+export interface LotteryOption {
+  /**
+   * 旋转轮数
+   */
+  round: number;
+  /**
+   * 奖品高度
+   */
+  itemHeight: number;
+  /**
+   * 是否显示剩余抽取次数
+   */
+  showLimitStock: boolean;
 }

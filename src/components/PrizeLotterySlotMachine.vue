@@ -30,7 +30,7 @@
   <div class="result">
     <el-dialog v-model="resultVisible" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
       <div class="prize-name">{{ currentPrize.name }}!!!</div>
-      <div class="prize-name">还剩{{ currentPrize.stock }}件</div>
+      <div v-if="option.showLimitStock" class="prize-name">还剩{{ currentPrize.stock }}件</div>
       <template #footer>
         <el-button class="center-of-prize start" type="danger" @click="onRestartBtnClick">
           <el-icon>
@@ -47,7 +47,7 @@
 import { PropType } from 'vue';
 import { Pointer } from '@element-plus/icons-vue';
 
-import { Prize } from '@/models';
+import { Target, LotteryOption } from '@/models';
 
 const props = defineProps({
   /**
@@ -58,8 +58,21 @@ const props = defineProps({
    * 奖品列表
    */
   prizeList: {
-    type: Array as PropType<Prize[]>,
-    default: () => [] as Prize[]
+    type: Array as PropType<Target[]>,
+    default: () => [] as Target[]
+  },
+  /**
+   * 抽奖配置
+   */
+  option: {
+    type: Object as PropType<LotteryOption>,
+    default: () => {
+      return {
+        round: 6,
+        itemHeight: 100,
+        showLimitStock: true
+      };
+    }
   }
 });
 
@@ -81,21 +94,12 @@ const dialogVisible = computed({
 /**
  * 记录本次抽中的奖品
  */
-const currentPrize = ref<Prize>({} as Prize);
+const currentPrize = ref<Target>({} as Target);
 
 /**
  * 抽奖配置
  */
-const option = ref({
-  /**
-   * 旋转轮数
-   */
-  round: 6,
-  /**
-   * 奖品高度
-   */
-  itemHeight: 100
-});
+const option = toRef(props, 'option');
 
 /**
  * 奖品高度（单位px）css用
@@ -137,7 +141,6 @@ const onStartBtnClick = (): void => {
   let index = parseInt((Math.random() * prizeData.value.length).toString());
   currentPrize.value = prizeData.value[index];
   startGame(index);
-  emit('afterLottery', currentPrize.value);
   showResult();
 };
 
@@ -192,6 +195,7 @@ const resultVisible = ref(false);
 const showResult = (): void => {
   setTimeout(() => {
     resultVisible.value = true;
+    emit('afterLottery', currentPrize.value);
   }, 3500);
 };
 
@@ -236,7 +240,9 @@ const onRestartBtnClick = (): void => {
 }
 
 .box {
-  width: 300px;
+  width: 40vw;
+  min-width: 300px;
+  max-width: 600px;
   // stylelint-disable-next-line value-keyword-case
   height: v-bind(itemHeightWithPx);
   margin: auto;
