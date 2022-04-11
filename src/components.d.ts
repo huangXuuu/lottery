@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AudioPlayer: typeof import('./components/AudioPlayer.vue')['default']
     Cropper: typeof import('./components/Cropper.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']

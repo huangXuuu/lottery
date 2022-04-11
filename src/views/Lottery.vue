@@ -58,6 +58,9 @@
         ></PrizeLotterySlotMachine>
       </div>
     </div>
+    <div class="audioContainer">
+      <AudioPlayer ref="audioPlayerRef" src="/audio/bgm.mp3"></AudioPlayer>
+    </div>
   </div>
 </template>
 
@@ -207,13 +210,20 @@ const afterLottery = (target: Target): void => {
 };
 
 /**
- * 结束抽奖后重置目标列表
+ * 音频播放器实例
+ */
+const audioPlayerRef = ref();
+
+/**
+ * 抽奖状态监听
  */
 watch(dialogVisible, (val: boolean) => {
   if (val) {
+    audioPlayerRef.value.play();
     return;
   }
 
+  audioPlayerRef.value.stop();
   targetTableRef.value?.clearSelection();
 });
 </script>
