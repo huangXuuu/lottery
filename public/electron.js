@@ -21,8 +21,8 @@ function createWindow() {
   } else {
     mainWindow = new BrowserWindow({
       show: false,
-      minWidth: 900,
-      minHeight: 600,
+      minWidth: 1180,
+      minHeight: 820,
       webPreferences: {
         nodeIntegration: false,
         webSecurity: false

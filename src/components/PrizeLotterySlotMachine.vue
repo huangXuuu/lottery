@@ -138,10 +138,32 @@ const prizeContainer = ref<HTMLUListElement>();
  * @returns {void}
  */
 const onStartBtnClick = (): void => {
-  let index = parseInt((Math.random() * prizeData.value.length).toString());
+  let index = getPrizeIndex();
   currentPrize.value = prizeData.value[index];
   startGame(index);
   showResult();
+};
+
+/**
+ * 中奖序号生成（概率模型：单个商品库存/总库存）
+ *
+ * @returns {number} 中奖序号
+ */
+const getPrizeIndex = (): number => {
+  const length = prizeData.value.length;
+  const prizeRange = [];
+  for (let i = 0; i < length; i++) {
+    const stock = prizeData.value[i].stock;
+    if (stock) {
+      for (let j = 0; j < stock; j++) {
+        prizeRange.push(i);
+      }
+    } else {
+      prizeRange.push(i);
+    }
+  }
+  const index = Math.floor((Math.random() * 1000 * prizeRange.length) % prizeRange.length);
+  return prizeRange[index];
 };
 
 /**
